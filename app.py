@@ -56,11 +56,13 @@ def get_battles():
 
     try:
         # updating battles for charachter database
-        mana_db.ManaWorldDB.update(
-            {"charachters.char_name": data["character"]},
+        char = data["character"]
+
+        query = mana_db.ManaWorldDB.update(
+            {"charachters.char_name": char},
             {"$push": {"charachters.$.battle_chat": data["battle"]}})
 
-        return jsonify({'status': '200', 'updated': 'battles', 'updated_charachter': data["character"]})
+        return jsonify({'status': '200', 'updated': 'battle', 'updated_charachter': data["character"]})
 
     except:
         return jsonify(fail_response)
@@ -75,12 +77,14 @@ def get_debug():
 
     try:
         # updating debug log for charachter database
-        mana_db.ManaWorldDB.update({"charachters.char_name": data["character"]},
-                                  {"$push": {"charachters.$.debug_chat": data["battle"]}})
+        char = data["character"]["character"]
+
+        query = mana_db.ManaWorldDB.update({"charachters.char_name": char},
+            {"$push":{"charachters.$.debug_chat": data["debug"]}})
 
         return jsonify({'status': '200',
                         'updated': 'debug',
-                        'updated_charachter': data["character"]})
+                        'updated_charachter': char})
     except:
         return jsonify(fail_response)
 
@@ -92,15 +96,16 @@ def get_general():
 
     data = json.loads(request.data)
 
+    char = data["character"]["character"]
+
     try:
-        # updating general log for charachter database
-        mana_db.ManaWorldDB.update(
-            {"charachters.char_name": data["character"]},
-            {"$push": {"charachters.$.general_chat": data["general"]}})
+        # updating debug log for charachter database
+
+        query = mana_db.ManaWorldDB.update({"charachters.char_name":char},{"$push":{"charachters.$.general_chat": data["general"]}})
 
         return jsonify({'status': '200',
                         'updated': 'general',
-                        'updated_charachter': data["character"]})
+                        'updated_charachter': char})
     except:
         return jsonify(fail_response)
 
@@ -114,13 +119,16 @@ def get_party():
 
     try:
         # updating parties for charachter database
-        mana_db.ManaWorldDB.update(
-            {"charachters.char_name": data["character"]},
+        char = data["character"]["character"]
+
+
+        query = mana_db.ManaWorldDB.update(
+            {"charachters.char_name": char},
             {"$push": {"charachters.$.party_chat": data["parties"]}})
 
         return jsonify({'status': '200',
                         'updated': 'party',
-                        'updated_charachter': data["character"]})
+                        'updated_charachter': char})
     except:
         return jsonify(fail_response)
 
@@ -131,11 +139,13 @@ def get_whisper():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    char = data["character"]["character"]
+
 
     try:
         # updating whispers for charachter database
         mana_db.ManaWorldDB.update(
-            {"charachters.char_name": data["character"]},
+            {"charachters.char_name": char},
             {"$push": {"charachters.$.whisper_chat": data["whispers"]}})
 
         return jsonify({'status': '200',
