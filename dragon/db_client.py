@@ -4,6 +4,7 @@ from pymongo import MongoClient
 
 
 class MongoDB:
+
     HOST = '178.62.125.198'
     PORT = 27017
 

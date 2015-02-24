@@ -5,11 +5,11 @@ import json
 
 sys.path.append('/Library/Python/2.7/site-packages')
 
-from flask import Flask, jsonify, make_response, render_template, request
+from flask import Flask, jsonify, make_response, render_template, request ,send_from_directory
 from db_client import MongoDB
 
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='/static')
 
 fail_response = {
     'status': 420,
@@ -20,7 +20,6 @@ fail_response = {
 @app.route('/')
 def homepage():
     return render_template('index.html')
-
 
 @app.errorhandler(404)
 def not_found(error):
@@ -161,4 +160,5 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host="178.62.125.198")
