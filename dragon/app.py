@@ -183,5 +183,5 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-    # app.run(host="178.62.125.198")
+    #app.run(debug=True)
+    app.run(host="178.62.125.198")
