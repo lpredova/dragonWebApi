@@ -3,13 +3,13 @@
 import sys
 import json
 
-sys.path.append('/Library/Python/2.7/site-packages')
+#sys.path.append('/Library/Python/2.7/site-packages')
 
-from flask import Flask, jsonify, make_response, render_template, request ,send_from_directory
+from flask import Flask, jsonify, render_template, request
 from db_client import MongoDB
 
 
-app = Flask(__name__,static_url_path='/static')
+app = Flask(__name__, static_url_path='/static')
 
 fail_response = {
     'status': 420,
@@ -21,9 +21,11 @@ fail_response = {
 def homepage():
     return render_template('index.html')
 
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error.html')
+
 
 # special api that checks if char exists in DB
 @app.route('/mw/api/v1/user', methods=['POST'])
@@ -36,9 +38,9 @@ def get_user():
     try:
         # searcing for character in database
         result = mana_db.ManaWorldDB.find({"charachters.char_name": data["character"]}, {"char_name": 1})
-        if not result==None:
+        if not result == None:
             return jsonify({'status': '200', 'description': 'true'})
-        else :
+        else:
             return jsonify({'status': '400', 'description': 'false'})
 
     except:
@@ -79,7 +81,7 @@ def get_debug():
         char = data["character"]["character"]
 
         query = mana_db.ManaWorldDB.update({"charachters.char_name": char},
-            {"$push":{"charachters.$.debug_chat": data["debug"]}})
+                                           {"$push": {"charachters.$.debug_chat": data["debug"]}})
 
         return jsonify({'status': '200',
                         'updated': 'debug',
@@ -100,7 +102,8 @@ def get_general():
     try:
         # updating debug log for charachter database
 
-        query = mana_db.ManaWorldDB.update({"charachters.char_name":char},{"$push":{"charachters.$.general_chat": data["general"]}})
+        query = mana_db.ManaWorldDB.update({"charachters.char_name": char},
+                                           {"$push": {"charachters.$.general_chat": data["general"]}})
 
         return jsonify({'status': '200',
                         'updated': 'general',
@@ -120,7 +123,6 @@ def get_party():
         # updating parties for charachter database
         char = data["character"]["character"]
 
-
         query = mana_db.ManaWorldDB.update(
             {"charachters.char_name": char},
             {"$push": {"charachters.$.party_chat": data["parties"]}})
@@ -131,6 +133,7 @@ def get_party():
     except:
         return jsonify(fail_response)
 
+
 @app.route('/mw/api/v1/trade', methods=['POST'])
 def get_trade():
     mongo = MongoDB()
@@ -139,17 +142,16 @@ def get_trade():
     data = json.loads(request.data)
 
     try:
-        # updating parties for charachter database
+        # updating parties for character database
         char = data["character"]["character"]
-
 
         query = mana_db.ManaWorldDB.update(
             {"charachters.char_name": char},
             {"$push": {"charachters.$.trade_chat": data["trades"]}})
 
-        return jsonify({'status': '200',
-                        'updated': 'party',
-                        'updated_charachter': char})
+        return jsonify({'status': query,
+                        'updated': data["trades"],
+                        'updated_character': char})
     except:
         return jsonify(fail_response)
 
@@ -161,7 +163,6 @@ def get_whisper():
 
     data = json.loads(request.data)
     char = data["character"]["character"]
-
 
     try:
         # updating whispers for charachter database
@@ -182,5 +183,5 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    #app.run(debug=True)
-    app.run(host="178.62.125.198")
+    app.run(debug=True)
+    # app.run(host="178.62.125.198")
