@@ -131,6 +131,28 @@ def get_party():
     except:
         return jsonify(fail_response)
 
+@app.route('/mw/api/v1/trade', methods=['POST'])
+def get_trade():
+    mongo = MongoDB()
+    mana_db = mongo.get_manaworld_database()
+
+    data = json.loads(request.data)
+
+    try:
+        # updating parties for charachter database
+        char = data["character"]["character"]
+
+
+        query = mana_db.ManaWorldDB.update(
+            {"charachters.char_name": char},
+            {"$push": {"charachters.$.trade_chat": data["trades"]}})
+
+        return jsonify({'status': '200',
+                        'updated': 'party',
+                        'updated_charachter': char})
+    except:
+        return jsonify(fail_response)
+
 
 @app.route('/mw/api/v1/whisper', methods=['POST'])
 def get_whisper():
