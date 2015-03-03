@@ -34,17 +34,19 @@ def get_user():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    char = data["character"]["character"]
 
     try:
         # searcing for character in database
-        result = mana_db.ManaWorldDB.find({"charachters.char_name": data["character"]}, {"char_name": 1})
-        if not result == None:
-            return jsonify({'status': '200', 'description': 'true'})
+        result = mana_db.ManaWorldDB.find({"charachters.char_name": char}, {"_id": 1}).count()
+
+        if result is 1:
+            return jsonify({'status': '200', 'description': "True"})
         else:
-            return jsonify({'status': '400', 'description': 'false'})
+            return jsonify({'status': '400', 'description': "False"})
 
     except:
-        return jsonify({'status': '400', 'description': data["character"]})
+        return jsonify({'status': '400', 'description': "False"})
 
 
 # api routes
