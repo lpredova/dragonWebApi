@@ -2,6 +2,7 @@
 
 import sys
 import json
+import datetime
 
 #sys.path.append('/Library/Python/2.7/site-packages')
 
@@ -56,16 +57,17 @@ def get_battles():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    date = str(datetime.datetime.now().date())
+    char = data["character"]["character"]
+
 
     try:
         # updating battles for charachter database
-        char = data["character"]
-
         query = mana_db.ManaWorldDB.update(
             {"charachters.char_name": char},
-            {"$push": {"charachters.$.battle_chat": data["battle"]}})
+            {"$push": {"charachters.$.battle_chat." + date: data["battle"]}})
 
-        return jsonify({'status': '200', 'updated': 'battle', 'updated_charachter': data["character"]})
+        return jsonify({'status': '200', 'updated': data["battle"], 'updated_charachter': char})
 
     except:
         return jsonify(fail_response)
@@ -77,13 +79,14 @@ def get_debug():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    date = str(datetime.datetime.now().date())
+    char = data["character"]["character"]
 
     try:
         # updating debug log for charachter database
-        char = data["character"]["character"]
-
-        query = mana_db.ManaWorldDB.update({"charachters.char_name": char},
-                                           {"$push": {"charachters.$.debug_chat": data["debug"]}})
+        query = mana_db.ManaWorldDB.update(
+            {"charachters.char_name": char},
+            {"$push": {"charachters.$.debug_chat." + date: data["debug"]}})
 
         return jsonify({'status': '200',
                         'updated': 'debug',
@@ -98,14 +101,15 @@ def get_general():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
-
+    date = str(datetime.datetime.now().date())
     char = data["character"]["character"]
 
     try:
         # updating debug log for charachter database
 
-        query = mana_db.ManaWorldDB.update({"charachters.char_name": char},
-                                           {"$push": {"charachters.$.general_chat": data["general"]}})
+        query = mana_db.ManaWorldDB.update(
+            {"charachters.char_name": char},
+            {"$push": {"charachters.$.general_chat." + date: data["general"]}})
 
         return jsonify({'status': '200',
                         'updated': 'general',
@@ -120,6 +124,7 @@ def get_party():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    date = str(datetime.datetime.now().date())
 
     try:
         # updating parties for charachter database
@@ -127,7 +132,7 @@ def get_party():
 
         query = mana_db.ManaWorldDB.update(
             {"charachters.char_name": char},
-            {"$push": {"charachters.$.party_chat": data["parties"]}})
+            {"$push": {"charachters.$.party_chat." + date: data["parties"]}})
 
         return jsonify({'status': '200',
                         'updated': 'party',
@@ -142,6 +147,8 @@ def get_trade():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    date = str(datetime.datetime.now().date())
+
 
     try:
         # updating parties for character database
@@ -149,10 +156,10 @@ def get_trade():
 
         query = mana_db.ManaWorldDB.update(
             {"charachters.char_name": char},
-            {"$push": {"charachters.$.trade_chat": data["trades"]}})
+            {"$push": {"charachters.$.trade_chat." + date: data["trades"]}})
 
-        return jsonify({'status': query,
-                        'updated': data["trades"],
+        return jsonify({'status': '200',
+                        'updated': 'trade',
                         'updated_character': char})
     except:
         return jsonify(fail_response)
@@ -164,17 +171,19 @@ def get_whisper():
     mana_db = mongo.get_manaworld_database()
 
     data = json.loads(request.data)
+    date = str(datetime.datetime.now().date())
     char = data["character"]["character"]
 
     try:
         # updating whispers for charachter database
-        mana_db.ManaWorldDB.update(
+        user = data["whispers"][0]["user"]
+        query = mana_db.ManaWorldDB.update(
             {"charachters.char_name": char},
-            {"$push": {"charachters.$.whisper_chat": data["whispers"]}})
+            {"$push": {"charachters.$.whisper_chat." + user + "." + date: data["whispers"]}})
 
         return jsonify({'status': '200',
-                        'updated': 'whispers',
-                        'updated_charachter': data["character"]})
+                        'updated': user,
+                        'updated_charachter': "user"})
     except:
         return jsonify(fail_response)
 
