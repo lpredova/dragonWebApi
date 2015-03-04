@@ -89,7 +89,7 @@ def get_debug():
             {"$push": {"charachters.$.debug_chat." + date: data["debug"]}})
 
         return jsonify({'status': '200',
-                        'updated': 'debug',
+                        'updated': 'general',
                         'updated_charachter': char})
     except:
         return jsonify(fail_response)
