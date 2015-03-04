@@ -164,7 +164,6 @@ def get_trade():
     except:
         return jsonify(fail_response)
 
-
 @app.route('/mw/api/v1/whisper', methods=['POST'])
 def get_whisper():
     mongo = MongoDB()
