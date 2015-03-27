@@ -89,8 +89,8 @@ def get_debug():
             {"$push": {"charachters.$.debug_chat." + date: data["debug"]}})
 
         return jsonify({'status': '200',
-                        'updated': 'general',
-                        'updated_charachter': char})
+                        'updated': char,
+                        'updated_character': "request.text"})
     except:
         return jsonify(fail_response)
 
@@ -194,4 +194,4 @@ def not_found(error):
 
 if __name__ == '__main__':
     #app.run(debug=True)
-    app.run(host="178.62.125.198")
+    app.run(host="161.53.120.2")
