@@ -4,8 +4,7 @@ from pymongo import MongoClient
 
 
 class MongoDB:
-
-    HOST = '178.62.125.198'
+    HOST = '161.53.120.2'
     PORT = 27017
 
     client = ""
@@ -29,7 +28,7 @@ class MongoDB:
         """
         self.ManaWorld = self.client.ManaWorld
         return self.ManaWorld
-        #self.get_manaworld_collection()
+        # self.get_manaworld_collection()
 
     def get_manaworld_collection(self):
         """
